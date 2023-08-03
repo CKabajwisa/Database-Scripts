@@ -1,0 +1,63 @@
+-- Creating the database
+CREATE DATABASE IF NOT EXISTS INTERSWITCH;
+USE INTERSWITCH;
+
+-- Creating the 'users' table
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    email_address VARCHAR(100) NOT NULL
+);
+
+-- Creating the 'roles' table
+CREATE TABLE roles (
+    role_id INT AUTO_INCREMENT PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL,
+    role_code VARCHAR(20) NOT NULL,
+    role_description VARCHAR(100)
+);
+
+-- Creating the 'institutions' table
+CREATE TABLE institutions (
+    institution_id INT AUTO_INCREMENT PRIMARY KEY,
+    institution_code VARCHAR(20) NOT NULL,
+    institution_name VARCHAR(100) NOT NULL
+);
+
+-- Creating the 'bank_branches' table
+CREATE TABLE bank_branches (
+    branch_id INT AUTO_INCREMENT PRIMARY KEY,
+    branch_code VARCHAR(20) NOT NULL,
+    branch_name VARCHAR(100) NOT NULL,
+    institution_id INT NOT NULL,
+    FOREIGN KEY (institution_id) REFERENCES institutions (institution_id)
+);
+
+-- Creating the 'corporate_users' table
+CREATE TABLE corporate_users (
+    corporate_user_id INT AUTO_INCREMENT PRIMARY KEY,
+    corporate_type VARCHAR(50) NOT NULL,
+    institution_id INT NOT NULL,
+    FOREIGN KEY (institution_id) REFERENCES institutions (institution_id)
+);
+
+-- Creating the 'user_roles' table to establish a many-to-many relationship between users and roles
+CREATE TABLE user_roles (
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (role_id) REFERENCES roles (role_id)
+);
+
+-- Creating the 'user_institutions' table to establish a many-to-many relationship between users and institutions
+CREATE TABLE user_institutions (
+    user_id INT NOT NULL,
+    institution_id INT NOT NULL,
+    PRIMARY KEY (user_id, institution_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (institution_id) REFERENCES institutions (institution_id)
+);
